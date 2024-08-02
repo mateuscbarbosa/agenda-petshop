@@ -1,3 +1,6 @@
 spring:
  application:
   name: agenda-petshop
+ data:
+  mongo:
+   uri: mongodb://${MONGODB_USER}:{MONGODB_PASSWORD}@${MONGODB_HOST}/${MONGODB_DATABASE}
