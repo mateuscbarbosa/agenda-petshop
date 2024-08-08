@@ -1,12 +1,10 @@
 package br.com.agenda_petshop.adapter.out.persistence.mongo;
 
-import br.com.agenda_petshop.adapter.out.persistence.mongo.entities.UserStatusMongo;
 import br.com.agenda_petshop.adapter.out.persistence.mongo.mapper.UserMongoMapper;
 import br.com.agenda_petshop.adapter.out.persistence.mongo.repositories.UserMongoRepository;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,16 +23,15 @@ public class UserMongoDataSource implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return mongoRepository.findByEmail(email)
+    public Optional<User> findById(String id) {
+        return mongoRepository.findById(id)
                 .map(UserMongoMapper.INSTANCE::toEntity);
     }
 
     @Override
-    public User update(User user) {
-        final var userMongo = UserMongoMapper.INSTANCE.toMongo(user);
-        final var savedUser = mongoRepository.save(userMongo);
-        return UserMongoMapper.INSTANCE.toEntity(savedUser);
+    public Optional<User> findByEmail(String email) {
+        return mongoRepository.findByEmail(email)
+                .map(UserMongoMapper.INSTANCE::toEntity);
     }
 
     @Override
@@ -42,11 +39,5 @@ public class UserMongoDataSource implements UserRepository {
         return mongoRepository.findAll().stream()
                 .map(UserMongoMapper.INSTANCE::toEntity)
                 .toList();
-    }
-
-    @Override
-    public void inactiveUser(User user) {
-        var userMongo = UserMongoMapper.INSTANCE.toMongo(user);
-        mongoRepository.save(userMongo);
     }
 }

@@ -2,7 +2,6 @@ package br.com.agenda_petshop.application.usecases.user;
 
 import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
-import br.com.agenda_petshop.model.user.User;
 import br.com.agenda_petshop.model.user.UserStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ public class InactiveUserUseCase {
         this.userRepository = userRepository;
     }
 
-    public void execute(User user){
-        var userFound = userRepository.findByEmail(user.getEmail());
+    public void execute(String id){
+        var userFound = userRepository.findById(id);
 
         if(userFound.isEmpty())
             throw new EntityNotFoundException("Usuário não encontrado.");
@@ -27,6 +26,6 @@ public class InactiveUserUseCase {
         userToUpdate.setUserStatus(UserStatus.INACTIVE);
         userToUpdate.setProfiles(new HashSet<>());
 
-        this.userRepository.inactiveUser(userToUpdate);
+        this.userRepository.save(userToUpdate);
     }
 }

@@ -4,3 +4,9 @@ spring:
  data:
   mongo:
    uri: mongodb://${MONGODB_USER}:{MONGODB_PASSWORD}@${MONGODB_HOST}/${MONGODB_DATABASE}
+
+app:
+ jwt:
+  secret: ${JWT_SECRET}
+  issuer: agenda-petshop
+  expiration: 10800

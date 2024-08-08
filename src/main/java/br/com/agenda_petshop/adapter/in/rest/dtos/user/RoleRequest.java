@@ -1,6 +1,6 @@
-package br.com.agenda_petshop.adapter.out.persistence.mongo.entities;
+package br.com.agenda_petshop.adapter.in.rest.dtos.user;
 
-public enum RoleMongo {
+public enum RoleRequest {
     ROLE_ADMIN,
     ROLE_COMMON,
     ROLE_CREATE_USER,

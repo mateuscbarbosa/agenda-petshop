@@ -24,7 +24,7 @@ public class ChangeFirstPasswordUserUseCase {
 
         if (!userToUpdate.isFirstPassword())
             throw new IllegalArgumentException("Não é a primeira senha.");
-
+        //TODO: precisa criar uma validação de senha com as regras
         userToUpdate.setFirstPassword(false);
         String encrypted = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(encrypted);

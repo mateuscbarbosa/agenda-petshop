@@ -4,18 +4,19 @@ import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
 import br.com.agenda_petshop.application.exceptions.NoUniqueValueException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UpdateUserUseCase {
+public class SelfUpdateUserUseCase {
     private final UserRepository userRepository;
 
-    public UpdateUserUseCase(UserRepository userRepository) {
+    public SelfUpdateUserUseCase(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User execute(String id, User user){
-        final var userById = userRepository.findById(id);
+    public User execute(User user) {
+        final var userById = userRepository.findById(user.getId());
         final var userByEmail = userRepository.findByEmail(user.getEmail());
 
         if(userById.isEmpty())
@@ -28,8 +29,10 @@ public class UpdateUserUseCase {
 
         userFound.setEmail(user.getEmail());
         userFound.setName(user.getName());
-        userFound.setProfiles(user.getProfiles());
+        //TODO: precisa criar uma validação de senha com as regras
+        String encrypted = new BCryptPasswordEncoder().encode(user.getPassword());
+        userFound.setPassword(encrypted);
 
-        return this.userRepository.save(userFound);
+        return userRepository.save(userFound);
     }
 }

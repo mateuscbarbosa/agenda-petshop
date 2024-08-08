@@ -1,34 +1,31 @@
 package br.com.agenda_petshop.application.usecases.user;
 
 import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
-import br.com.agenda_petshop.application.exceptions.NoUniqueValueException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UpdateUserUseCase {
+public class ResetUserPasswordUseCase {
     private final UserRepository userRepository;
 
-    public UpdateUserUseCase(UserRepository userRepository) {
+    public ResetUserPasswordUseCase(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User execute(String id, User user){
+    public User execute(String id) {
         final var userById = userRepository.findById(id);
-        final var userByEmail = userRepository.findByEmail(user.getEmail());
 
         if(userById.isEmpty())
             throw new EntityNotFoundException("Usuário não encontrado.");
 
-        if((!user.getEmail().equals(userById.get().getEmail())) && userByEmail.isPresent())
-            throw new NoUniqueValueException("Um usuário com esse e-mail já está cadastrado no banco");
-
         var userFound = userById.get();
 
-        userFound.setEmail(user.getEmail());
-        userFound.setName(user.getName());
-        userFound.setProfiles(user.getProfiles());
+        userFound.generatePassword(10);
+        String encrypted = new BCryptPasswordEncoder().encode(userFound.getPassword());
+        userFound.setPassword(encrypted);
+        userFound.setFirstPassword(true);
 
         return this.userRepository.save(userFound);
     }
