@@ -7,12 +7,17 @@ import br.com.agenda_petshop.model.user.UserStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class CreateUserUseCase {
     private final UserRepository userRepository;
+    private final NewPasswordUserEmailSenderUseCase newPasswordUserEmailSenderUseCase;
 
-    public CreateUserUseCase(UserRepository userRepository) {
+    public CreateUserUseCase(UserRepository userRepository, NewPasswordUserEmailSenderUseCase newPasswordUserEmailSenderUseCase) {
         this.userRepository = userRepository;
+        this.newPasswordUserEmailSenderUseCase = newPasswordUserEmailSenderUseCase;
     }
 
     public User execute(User user){
@@ -23,6 +28,9 @@ public class CreateUserUseCase {
 
         user.generatePassword(10);
         String encrypted = new BCryptPasswordEncoder().encode(user.getPassword());
+
+        newPasswordUserEmailSenderUseCase.execute(user);
+
         user.setPassword(encrypted);
         user.setFirstPassword(true);
         user.setUserStatus(UserStatus.ACTIVE);

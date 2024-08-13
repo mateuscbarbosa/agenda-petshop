@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResetUserPasswordUseCase {
     private final UserRepository userRepository;
+    private final NewPasswordUserEmailSenderUseCase newPasswordUserEmailSenderUseCase;
 
-    public ResetUserPasswordUseCase(UserRepository userRepository) {
+    public ResetUserPasswordUseCase(UserRepository userRepository, NewPasswordUserEmailSenderUseCase newPasswordUserEmailSenderUseCase) {
         this.userRepository = userRepository;
+        this.newPasswordUserEmailSenderUseCase = newPasswordUserEmailSenderUseCase;
     }
 
     public User execute(String id) {
@@ -24,6 +26,9 @@ public class ResetUserPasswordUseCase {
 
         userFound.generatePassword(10);
         String encrypted = new BCryptPasswordEncoder().encode(userFound.getPassword());
+
+        newPasswordUserEmailSenderUseCase.execute(userFound);
+
         userFound.setPassword(encrypted);
         userFound.setFirstPassword(true);
 
