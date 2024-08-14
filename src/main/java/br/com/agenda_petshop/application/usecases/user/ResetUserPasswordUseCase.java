@@ -27,7 +27,8 @@ public class ResetUserPasswordUseCase {
         userFound.generatePassword(10);
         String encrypted = new BCryptPasswordEncoder().encode(userFound.getPassword());
 
-        newPasswordUserEmailSenderUseCase.execute(userFound);
+        newPasswordUserEmailSenderUseCase.execute(userFound,
+                "Reset de senha usuário "+userFound.getName()+" Agenda PetShop");
 
         userFound.setPassword(encrypted);
         userFound.setFirstPassword(true);

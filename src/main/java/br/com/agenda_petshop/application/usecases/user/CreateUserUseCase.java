@@ -29,7 +29,7 @@ public class CreateUserUseCase {
         user.generatePassword(10);
         String encrypted = new BCryptPasswordEncoder().encode(user.getPassword());
 
-        newPasswordUserEmailSenderUseCase.execute(user);
+        newPasswordUserEmailSenderUseCase.execute(user, "Bem vindo ao Agenda PetShop");
 
         user.setPassword(encrypted);
         user.setFirstPassword(true);

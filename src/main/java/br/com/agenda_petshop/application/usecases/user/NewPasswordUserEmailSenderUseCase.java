@@ -7,6 +7,8 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -23,7 +25,7 @@ public class NewPasswordUserEmailSenderUseCase {
         this.templateEngine = templateEngine;
     }
 
-    public void execute(User user) {
+    /*public void execute(User user, String subject) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -38,12 +40,26 @@ public class NewPasswordUserEmailSenderUseCase {
 
             String htmlContent = templateEngine.process("new-password-email-template", context);
             helper.setTo(user.getEmail());
-            helper.setSubject("Bem vindo ao Agenda PetShop");
+            helper.setSubject(subject);
             helper.setText(htmlContent, true);
-
-            mailSender.send(message);
+            //TODO: desativado por hora
+            //mailSender.send(message);
         } catch (MessagingException e) {
             throw new EmailException("Erro ao tentar enviar email.", e);
         }
+    }*/
+
+    public String execute(User user, String subject) {
+
+        Model model = new ExtendedModelMap();
+
+        Map<String,Object> variables = new HashMap<>();
+        variables.put("name", user.getName());
+        variables.put("email", user.getEmail());
+        variables.put("password", user.getPassword());
+
+        model.addAllAttributes(variables);
+
+        return "new-password-email-template";
     }
 }

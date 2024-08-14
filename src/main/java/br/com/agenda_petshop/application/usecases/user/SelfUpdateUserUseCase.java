@@ -2,6 +2,7 @@ package br.com.agenda_petshop.application.usecases.user;
 
 import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
 import br.com.agenda_petshop.application.exceptions.NoUniqueValueException;
+import br.com.agenda_petshop.application.exceptions.PasswordValidationException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,10 +30,24 @@ public class SelfUpdateUserUseCase {
 
         userFound.setEmail(user.getEmail());
         userFound.setName(user.getName());
-        //TODO: precisa criar uma validação de senha com as regras
+        validatePassword(user.getPassword());
         String encrypted = new BCryptPasswordEncoder().encode(user.getPassword());
         userFound.setPassword(encrypted);
 
         return userRepository.save(userFound);
+    }
+
+    private void validatePassword(String password) {
+        final String PASSWORD_PATTERN = "^(?=(?:.*[a-z]){2,})" +
+                "(?=(?:.*[A-Z]){2,})" +
+                "(?=(?:.*\\d){2,})" +
+                "(?=(?:.*[!@#$%&*\\_\\+\\-]){1,})" +
+                ".{8,}$";
+
+        if (!password.matches(PASSWORD_PATTERN)) {
+            throw new PasswordValidationException("A senha deve ter pelo menos 8 caracteres, " +
+                    "contendo pelo menos 2 letras maiúsculas, 2 letras minúsculas, 2 números, " +
+                    "e 1 dos seguintes símbolos: !@#$%&*_+-");
+        }
     }
 }
