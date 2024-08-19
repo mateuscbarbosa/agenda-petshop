@@ -1,6 +1,6 @@
 package br.com.agenda_petshop.application.usecases.user;
 
-import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
+import br.com.agenda_petshop.application.exceptions.UserNotFoundException;
 import br.com.agenda_petshop.application.exceptions.PasswordValidationException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
@@ -19,7 +19,7 @@ public class ChangeFirstPasswordUserUseCase {
         var userFound = userRepository.findByEmail(user.getEmail());
 
         if(userFound.isEmpty())
-            throw new EntityNotFoundException("Usuário não encontrado.");
+            throw new UserNotFoundException(user.getEmail());
 
         var userToUpdate = userFound.get();
 
@@ -42,9 +42,7 @@ public class ChangeFirstPasswordUserUseCase {
                 ".{8,}$";
 
         if (!password.matches(PASSWORD_PATTERN)) {
-            throw new PasswordValidationException("A senha deve ter pelo menos 8 caracteres, " +
-                    "contendo pelo menos 2 letras maiúsculas, 2 letras minúsculas, 2 números, " +
-                    "e 1 dos seguintes símbolos: !@#$%&*_+-");
+            throw new PasswordValidationException();
         }
     }
 }

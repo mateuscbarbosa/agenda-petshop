@@ -1,6 +1,6 @@
 package br.com.agenda_petshop.application.usecases.auth;
 
-import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
+import br.com.agenda_petshop.application.exceptions.UserNotFoundException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ public class LoadUserUseCase implements UserDetailsService {
         final var user = this.userRepository.findByEmail(username);
 
         if(user.isEmpty())
-            throw new EntityNotFoundException("Usuário não encontrado.");
+            throw new UserNotFoundException(username);
 
         return user.get();
     }

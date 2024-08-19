@@ -31,7 +31,7 @@ public class GenerateTokenUseCase {
                     .sign(Algorithm.HMAC256(secret));
 
         }catch (JWTCreationException e){
-            throw new GenerateTokenException("Erro ao criar token.", e);
+            throw new GenerateTokenException(e);
         }
     }
 

@@ -23,7 +23,7 @@ public class RecoverSubjectFromTokenUseCase {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException | IllegalArgumentException e) {
-            throw new TokenValidationException("Token inválido ou expirado! " + e.getMessage());
+            throw new TokenValidationException(e.getMessage());
         }
     }
 }

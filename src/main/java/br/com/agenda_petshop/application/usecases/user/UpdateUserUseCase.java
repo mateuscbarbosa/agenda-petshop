@@ -1,7 +1,7 @@
 package br.com.agenda_petshop.application.usecases.user;
 
-import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
-import br.com.agenda_petshop.application.exceptions.NoUniqueValueException;
+import br.com.agenda_petshop.application.exceptions.UserNotFoundException;
+import br.com.agenda_petshop.application.exceptions.NoUniqueEmailException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,10 @@ public class UpdateUserUseCase {
         final var userByEmail = userRepository.findByEmail(user.getEmail());
 
         if(userById.isEmpty())
-            throw new EntityNotFoundException("Usuário não encontrado.");
+            throw new UserNotFoundException(id);
 
         if((!user.getEmail().equals(userById.get().getEmail())) && userByEmail.isPresent())
-            throw new NoUniqueValueException("Um usuário com esse e-mail já está cadastrado no banco");
+            throw new NoUniqueEmailException();
 
         var userFound = userById.get();
 

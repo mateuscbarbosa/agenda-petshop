@@ -1,6 +1,6 @@
 package br.com.agenda_petshop.application.usecases.user;
 
-import br.com.agenda_petshop.application.exceptions.EntityNotFoundException;
+import br.com.agenda_petshop.application.exceptions.UserNotFoundException;
 import br.com.agenda_petshop.application.repositories.UserRepository;
 import br.com.agenda_petshop.model.user.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +20,7 @@ public class ResetUserPasswordUseCase {
         final var userById = userRepository.findById(id);
 
         if(userById.isEmpty())
-            throw new EntityNotFoundException("Usuário não encontrado.");
+            throw new UserNotFoundException(id);
 
         var userFound = userById.get();
 

@@ -1,16 +1,11 @@
 package br.com.agenda_petshop.application.usecases.user;
 
-import br.com.agenda_petshop.application.exceptions.EmailException;
 import br.com.agenda_petshop.model.user.User;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +40,7 @@ public class NewPasswordUserEmailSenderUseCase {
             //TODO: desativado por hora
             //mailSender.send(message);
         } catch (MessagingException e) {
-            throw new EmailException("Erro ao tentar enviar email.", e);
+            throw new EmailSenderException(e);
         }
     }*/
 
